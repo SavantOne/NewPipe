@@ -204,6 +204,7 @@ public class RouterActivity extends AppCompatActivity {
         final String showInfoKey = getString(R.string.show_info_key);
         final String videoPlayerKey = getString(R.string.video_player_key);
         final String backgroundPlayerKey = getString(R.string.background_player_key);
+        final String enqueueBackgroundKey = getString(R.string.enqueue_background_key);
         final String popupPlayerKey = getString(R.string.popup_player_key);
         final String downloadKey = getString(R.string.download_key);
         final String alwaysAskKey = getString(R.string.always_ask_open_action_key);
@@ -252,7 +253,8 @@ public class RouterActivity extends AppCompatActivity {
             boolean serviceSupportsChoice = false;
             if (isVideoPlayerSelected) {
                 serviceSupportsChoice = capabilities.contains(VIDEO);
-            } else if (selectedChoiceKey.equals(backgroundPlayerKey)) {
+            } else if (selectedChoiceKey.equals(backgroundPlayerKey)
+                    || selectedChoiceKey.equals(enqueueBackgroundKey)) {
                 serviceSupportsChoice = capabilities.contains(AUDIO);
             }
 
@@ -390,6 +392,9 @@ public class RouterActivity extends AppCompatActivity {
         final AdapterChoiceItem backgroundPlayer = new AdapterChoiceItem(
                 getString(R.string.background_player_key), getString(R.string.background_player),
                 resolveResourceIdFromAttr(context, R.attr.ic_headset));
+        final AdapterChoiceItem enqueueBackground = new AdapterChoiceItem(
+                getString(R.string.enqueue_background_key), getString(R.string.enqueue_background),
+                resolveResourceIdFromAttr(context, R.attr.ic_add));
 
         if (linkType == LinkType.STREAM) {
             if (isExtVideoEnabled) {
@@ -419,6 +424,7 @@ public class RouterActivity extends AppCompatActivity {
             }
             if (capabilities.contains(AUDIO)) {
                 returnList.add(backgroundPlayer);
+                returnList.add(enqueueBackground);
             }
 
         } else {
@@ -429,6 +435,7 @@ public class RouterActivity extends AppCompatActivity {
             }
             if (capabilities.contains(AUDIO) && !isExtAudioEnabled) {
                 returnList.add(backgroundPlayer);
+                returnList.add(enqueueBackground);
             }
         }
 
@@ -657,6 +664,7 @@ public class RouterActivity extends AppCompatActivity {
                 final String videoPlayerKey = getString(R.string.video_player_key);
                 final String backgroundPlayerKey = getString(R.string.background_player_key);
                 final String popupPlayerKey = getString(R.string.popup_player_key);
+                final String enqueueBackgroundKey = getString(R.string.enqueue_background_key);
 
                 final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(this);
@@ -689,6 +697,8 @@ public class RouterActivity extends AppCompatActivity {
                     NavigationHelper.playOnBackgroundPlayer(this, playQueue, true);
                 } else if (choice.playerChoice.equals(popupPlayerKey)) {
                     NavigationHelper.playOnPopupPlayer(this, playQueue, true);
+                } else if (choice.playerChoice.equals((enqueueBackgroundKey))) {
+                    NavigationHelper.enqueueOnBackgroundPlayer(this, playQueue, true);
                 }
             };
         }
